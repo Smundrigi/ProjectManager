@@ -342,7 +342,8 @@ public class LoginWindow extends JFrame {
     /**
      * login
      */
-    public void login() throws IOException, BadLocationException {
+    public void login() throws IOException, BadLocationException 
+    {
 
         // get user data
         selectedServer = comboBoxServer.getSelectedItem().toString();
@@ -352,7 +353,22 @@ public class LoginWindow extends JFrame {
         userPassword = String.valueOf(pw);
         
         // logwindow
-        logWindow = new LogWindow(); 
+        logWindow = new LogWindow();
+        
+        /*
+        @Author:Swapna
+        @Date:3rd October 2017
+        @Comments:Blank password or username issue is handled
+        */
+        if((username.equals(""))||(userPassword.equals("")))
+        {
+                    JOptionPane.showMessageDialog(this,
+                    "Username or Password can not be blank",
+                    "Error Message",
+                   JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
         logWindow.setUserLogFileDir(this.getUserName());
         // write to log file
         String date = logWindow.dateFormat.format(new Date());
@@ -360,19 +376,17 @@ public class LoginWindow extends JFrame {
         logWindow.readMessages(); // read log messages from the log file
         
         // connect to database
-        logWindow.addMessageWithDate("3:Start to connect local database...");
-        jLabel2.setText("<html><b>Start to connect local database...</b></html>");
+        logWindow.addMessageWithDate("3:Start to connect  "+selectedDB+ "database...");
+        jLabel2.setText("<html><b>Start to connect "+selectedServer+"  server</b></html>");
         jLabel2.paintImmediately(jLabel2.getVisibleRect());
-
-        if(DBConnection.connect(selectedServer, selectedDB, userName, userPassword)){
-            logWindow.addMessageWithDate("Connect successfully!");
+        if(DBConnection.connect(selectedServer, selectedDB, userName, userPassword))
+        {
+            logWindow.addMessageWithDate("Connect to "+selectedServer+" successfully!");
             
-            jLabel2.setText("<html><b>Connection successful!<br>Authenticating...</b></html>");
-           jLabel2.paintImmediately(jLabel2.getVisibleRect());
+            jLabel2.setText("<html><b>Successfully conected to "+selectedServer+" Server !<br>Authenticating...</b></html>");
+            jLabel2.paintImmediately(jLabel2.getVisibleRect());
           
-           logWindow.addMessageWithDate("Authenticating...");
-            
-            
+            logWindow.addMessageWithDate("Authenticating...");
             if(!Authorization.getInfoFromDB()){
                 logWindow.addMessageWithDate("This user has not been authorized!"
                                           + "\n Access denied!");
@@ -385,7 +399,6 @@ public class LoginWindow extends JFrame {
             }
             
             userName = userName.substring(7);
-             System.out.println("userName: " + userName);
             logWindow.addMessageWithDate("Authenticating...");
             logWindow.addMessageWithDate("Authentication Successful!" + " Username: " + userName);
             
@@ -420,7 +433,8 @@ public class LoginWindow extends JFrame {
             // terminate this object
             this.dispose();// returns used resources
             
-        } else {
+        } else 
+        {
 
             JOptionPane.showMessageDialog(this,
                     "Cannot access remote db server.\n Now enter the offline mode.",
@@ -431,7 +445,14 @@ public class LoginWindow extends JFrame {
             logWindow.addMessageWithDate("Entering offline mode..");
             Authorization.setAdminComponentType("user");
             Authorization.setAccessLevel("user");
-            userName = userName.substring(7);
+            if(userName.length()>=7)
+            {
+                userName = userName.substring(7);
+            }
+            else
+            {
+                userName = "pupone";
+            }
             
             // create an projectManager object
             projectManager = new ProjectManagerWindow(userName,false);
@@ -458,7 +479,7 @@ public class LoginWindow extends JFrame {
             
        }
        
-
+        }
     }
     
     private DefaultComboBoxModel getServersCBModel() {
