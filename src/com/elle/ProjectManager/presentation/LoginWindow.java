@@ -360,6 +360,7 @@ public class LoginWindow extends JFrame {
         @Date:3rd October 2017
         @Comments:Blank password or username issue is handled
         */
+        jLabel1.setText("<html><b>Authenticating<b></html>");
         if((username.equals(""))||(userPassword.equals("")))
         {
                     JOptionPane.showMessageDialog(this,
@@ -376,25 +377,25 @@ public class LoginWindow extends JFrame {
         logWindow.readMessages(); // read log messages from the log file
         
         // connect to database
-        logWindow.addMessageWithDate("3:Start to connect  "+selectedDB+ "database...");
-        jLabel2.setText("<html><b>Start to connect "+selectedServer+"  server</b></html>");
+        logWindow.addMessageWithDate("Start to connect to database..."+selectedDB+"");
+        jLabel2.setText("<html><b>Start to connect server "+selectedServer+"</b></html>");
         jLabel2.paintImmediately(jLabel2.getVisibleRect());
         if(DBConnection.connect(selectedServer, selectedDB, userName, userPassword))
         {
             logWindow.addMessageWithDate("Connect to "+selectedServer+" successfully!");
             
-            jLabel2.setText("<html><b>Successfully conected to "+selectedServer+" Server !<br>Authenticating...</b></html>");
+            jLabel2.setText("<html><b>Successfully conected to "+selectedServer+"!<br>Authenticating...</b></html>");
             jLabel2.paintImmediately(jLabel2.getVisibleRect());
           
             logWindow.addMessageWithDate("Authenticating...");
             if(!Authorization.getInfoFromDB()){
-                logWindow.addMessageWithDate("This user has not been authorized!"
+                logWindow.addMessageWithDate(""+userName+" has not been authorized!"
                                           + "\n Access denied!");
                 
-                jLabel2.setText("This user has not been authorized!"
-                                          + "\n Access denied!");
+                //jLabel2.setText("This user has not been authorized!"
+                  //                        + "\n Access denied!");
                 jLabel2.paintImmediately(jLabel2.getVisibleRect());
-                JOptionPane.showMessageDialog(this, "You have not been authorized. Default user access.");
+                JOptionPane.showMessageDialog(this, ""+userName+" ...you have not been authorized. Default user access.");
                 JOptionPane.showMessageDialog(this, "Logged in as default user.");
             }
             
